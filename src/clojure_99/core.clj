@@ -91,3 +91,23 @@
 (defn p20 [lst k]
   "Remove the Kth element from a list."
   (concat (take (dec k) lst) (drop k lst)))
+
+(defn p21 [e lst k]
+  "Insert an element at a given position into a list."
+  (concat (take (dec k) lst) (list e) (drop (dec k) lst)))
+
+(defn p22 [a b]
+  "Create a list containing all integers within a given range."
+  (range a (inc b)))
+
+(defn p23 [lst k]
+  "Extract a given number of randomly selected elements from a list."
+  (take k (shuffle lst)))
+
+(defn p24 [k n]
+  "Lotto: Draw N different random numbers from the set 1..N"
+  (take k (shuffle (range 1 (inc n)))))
+
+(defn p25 [lst]
+  "Generate a random permutation of the elements of a list."
+  (shuffle lst))
