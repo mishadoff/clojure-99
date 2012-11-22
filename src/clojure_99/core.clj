@@ -69,3 +69,25 @@
 (defn p15 [lst k]
   "Duplicate the elements of a list a given number of times."
   (mapcat #(repeat k %) lst))
+
+(defn p16 [lst n]
+  "Drop every Nth element from a list."
+  (flatten (partition-all (dec n) n lst)))
+
+(defn p17 [lst n]
+  "Split a list into two parts; the length of the first part is given."
+  (split-at n lst))
+
+(defn p18 [lst n k]
+  "Extract a slice from a list."
+  (take (inc (- k n)) (drop (dec n) lst)))
+
+(defn p19 [lst n]
+  "Rotate a list N places to the left."
+  (let [k (if (pos? n) n (+ n (count lst)))
+        [a b] (split-at k lst)]
+    (concat b a)))
+
+(defn p20 [lst k]
+  "Remove the Kth element from a list."
+  (concat (take (dec k) lst) (drop k lst)))
