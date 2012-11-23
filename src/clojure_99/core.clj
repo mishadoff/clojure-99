@@ -1,4 +1,6 @@
-(ns clojure-99.core)
+(ns clojure-99.core
+  (:require [clojure.contrib.combinatorics :as comb])
+  (:require [clojure.set :as sets]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; 99 Clojure Problems ;;;
@@ -111,3 +113,39 @@
 (defn p25 [lst]
   "Generate a random permutation of the elements of a list."
   (shuffle lst))
+
+(defn p26 [lst k]
+  "Generate the combinations of K distinct objects chosen
+   from the N elements of a list"
+  (comb/combinations lst k))
+
+(defn p27-a [st]
+  "Group the elements of a set into disjoint subsets.
+   Size of list is 9, all element are different,
+   groups will consist 2, 3 and 4 elements"
+  (for [fg (comb/combinations st 2)
+        sg (comb/combinations (remove #(contains? (set fg) %) st) 3)
+        :let [lg (remove #(contains? (sets/union (set sg) (set fg)) %) st)]]
+    (map set [fg sg lg])))
+
+(defn p27-b [st groups]
+  "Group the elements of a set into disjoint subsets.
+   All element are different, size of lst equal to sum of groups elems."
+  (let [n (count groups)
+        f-rec (fn [st groups]
+                (cond (= 1 (count groups)) [[st]]
+                      :else (let [[g1 & gs] groups
+                                  fg (comb/combinations st g1)]
+                              (for [f fg]
+                                (map #(cons (set f) %)
+                                     (p27-b (sets/difference st (set f)) gs))))))]
+    (partition n n (flatten (f-rec st groups)))))
+
+(defn p28-a [lst]
+  "Sorting list of lists according to the length of sublist"
+  (reverse (sort-by count lst)))
+
+(defn p28-b [lst]
+  "Sorting list of lists according to the frequency of sublist length"
+  (let [freqs (frequencies (map count lst))]
+    (sort-by #(get freqs (count %)) lst)))
