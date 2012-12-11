@@ -1,6 +1,8 @@
 (ns clojure-99.core
   (:require [clojure.contrib.combinatorics :as comb])
-  (:require [clojure.set :as sets]))
+  (:require [clojure.set :as sets])
+  (:require [clojure.contrib.lazy-seqs :as lazy])
+  (:require [clojure.contrib.math :as math]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; 99 Clojure Problems ;;;
@@ -149,3 +151,64 @@
   "Sorting list of lists according to the frequency of sublist length"
   (let [freqs (frequencies (map count lst))]
     (sort-by #(get freqs (count %)) lst)))
+
+;; Arithmetic
+
+(defn p29 [n]
+  "Determine whether a given integer number is prime."
+  (= n (first (drop-while #(< % n) lazy/primes))))
+
+(defn p30 [n]
+  "Determine the prime factors of a given positive integer."
+  (loop [[p & ps] lazy/primes num n fact []]
+    (if (= 1 num) fact
+        (if (zero? (mod num p)) (recur lazy/primes (/ num p) (conj fact p))
+            (recur ps num fact)))))
+
+(defn p31 [n]
+  "Determine the prime factors of a given positive integer with their multiplicity."
+  (map (juxt first count) (partition-by identity (p30 n))))
+
+(defn p32 [a b]
+  "A list of prime numbers in given range."
+  (take-while #(<= % b) (drop-while #(< % a) lazy/primes)))
+
+(defn p33 [n]
+  "Find two primes that sum to given number. The number must be even."
+  (let [pspace (take-while #(< % n) lazy/primes)]
+    (first (for [i pspace j pspace :when (= (+ i j) n)]
+             [i j]))))
+
+(defn p34-a [a b]
+  "Find list of all Goldbach compositions in current range."
+  (for [i (range a (inc b)) :when (even? i)]
+    (cons i (p33 i))))
+
+(defn p34-b [a b limit]
+  "Find list of all Goldbach compositions where each number greaterthan limit."
+  (for [[q w e] (p34-a a b) :when (and (> w limit) (> e limit))]
+    [q w e]))
+
+(defn p35 [a b]
+  "Find Greatest Common Divisor for a and b."
+  (math/gcd a b))
+
+(defn p36 [a b]
+  "Determines if two numbers are coprime."
+  (= 1 (p35 a b)))
+
+(defn p37 [m]
+  "Euler's totient function."
+  (reduce + (for [r (range 1 m)]
+              (if (p36 r m) 1 0))))
+
+(defn p38 [m]
+  "Euler's totient function. Algorithm 2."
+  (reduce * (for [[p m] (p31 m)]
+              (* (dec p) (math/expt p (dec m))))))
+
+(defn p39 [m]
+  "Comparison of two Euler's totient function eimplemantations. Side effect."
+  (let []
+    (println "1st implementation: p37 =>" (time (p37 m)))
+    (println "2nd implementation: p38 =>" (time (p38 m)))))
