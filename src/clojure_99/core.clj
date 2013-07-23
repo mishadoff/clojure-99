@@ -1,34 +1,40 @@
 (ns clojure-99.core
-  (:require [clojure.contrib.combinatorics :as comb])
-  (:require [clojure.set :as sets])
-  (:require [clojure.contrib.lazy-seqs :as lazy])
-  (:require [clojure.contrib.math :as math]))
+  (:require [clojure.math.combinatorics :as comb])
+  (:require [clojure.math.numeric-tower :as math])
+  (:require [clojure.set :as sets]))
+  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; 99 Clojure Problems ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Lists
+;; Part 1. Lists
 
-(defn p01 [lst]
-  "Find the last element of a list."
+;; Find the last element of a list. If list is empty return nil.
+(defn problem01 [lst]
   (last lst))
 
-(defn p02 [lst]
-  "Find the last but one element of a list."
+;; Find the last but one element of a list. If element not found return nil.
+(defn problem02 [lst]
   (last (butlast lst)))
 
-(defn p03 [lst k]
-  "Find the Kth element of a list."
-  (nth lst (dec k)))
+;; Find the kth element of a list. If list does not contain specific index, return nil
+(defn problem03 [lst k]
+  (if (<= 1 k (count lst)) 
+    (nth lst (dec k))))
 
-(defn p04 [lst]
-  "Find the number of elements of a list."
+;; Find the number of elements of a list
+(defn problem04 [lst]
   (count lst))
 
-(defn p05 [lst]
-  "Reverse a list."
+;; Reverse a list
+(defn problem05 [lst]
   (reverse lst))
+
+
+;; Cover with tests
+
+
 
 (defn p06 [lst]
   "Find out whether a list is a palindrome."
@@ -212,3 +218,5 @@
   (let []
     (println "1st implementation: p37 =>" (time (p37 m)))
     (println "2nd implementation: p38 =>" (time (p38 m)))))
+
+(defn p40 [a b expr])
